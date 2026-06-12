@@ -39,18 +39,17 @@ st.sidebar.caption('GameVault Publishing — find lasting appeal, not temporary 
 
 st.sidebar.subheader('Scorecard weights')
 st.sidebar.caption('The components are the analysis; the weighting is strategy. Tune it live.')
-w_sent = st.sidebar.slider('Sentiment health', 0.0, 1.0, 0.35, 0.05)
-w_mom = st.sidebar.slider('Momentum (lasting appeal)', 0.0, 1.0, 0.25, 0.05)
-w_eng = st.sidebar.slider('Engagement depth', 0.0, 1.0, 0.25, 0.05)
-w_com = st.sidebar.slider('Community validation', 0.0, 1.0, 0.15, 0.05)
+w_sent = st.sidebar.slider('Sentiment health', 0.0, 1.0, 0.40, 0.05)
+w_mom = st.sidebar.slider('Momentum (lasting appeal)', 0.0, 1.0, 0.30, 0.05)
+w_reg = st.sidebar.slider('Regular player', 0.0, 1.0, 0.30, 0.05)
 hide_thin = st.sidebar.toggle('Hide titles with <100 reviews', value=False)
 
-weights = np.array([w_sent, w_mom, w_eng, w_com])
-weights = weights / weights.sum() if weights.sum() else np.array([.35, .25, .25, .15])
+weights = np.array([w_sent, w_mom, w_reg])
+weights = weights / weights.sum() if weights.sum() else np.array([.40, .30, .30])
 
 sc = scorecard.copy()
 sc['composite'] = (sc[['score_sentiment', 'score_momentum',
-                       'score_engagement', 'score_community']] @ weights) * 100
+                       'score_regular']] @ weights) * 100
 sc = sc.sort_values('composite', ascending=False).reset_index(drop=True)
 sc.index += 1  # rank
 if hide_thin:
